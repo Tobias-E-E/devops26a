@@ -1,0 +1,7 @@
+# Dependencies for the black-box integration tests. Deliberately separate
+# from backend/requirements.txt: these tests run on the CI runner and talk
+# HTTP to a deployed app, so they must NOT need the application's own
+# dependencies. If a test can only run where fastapi is installed, it isn't
+# testing the deployment — it's testing the source tree.
+pytest==8.3.4
+httpx==0.28.1

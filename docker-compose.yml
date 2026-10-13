@@ -1,0 +1,12 @@
+services:
+  backend:
+    build: ./backend
+    image: template-app-backend
+
+  frontend:
+    build: ./frontend
+    image: template-app-frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend

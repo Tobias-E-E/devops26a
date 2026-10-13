@@ -1,0 +1,15 @@
+# Bumped from 0.115.6 by the Spar C Trivy gate: 0.115.6 pins
+# starlette<0.42, and starlette 0.41.3 carries three fixable HIGH CVEs
+# (CVE-2025-62727, CVE-2026-48818, CVE-2026-54283). 0.140.13 resolves
+# starlette 1.3.1, which is at or above every one of those fixed
+# versions. A patch existed, so we took the patch - see security/README.md.
+fastapi==0.140.13
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pytest==8.3.4
+pytest-cov==6.0.0
+# starlette 1.3.1's TestClient prefers httpx2, the pydantic-maintained
+# successor to httpx; using it avoids a StarletteDeprecationWarning on
+# every test run.
+httpx2==2.9.1
+ruff==0.8.4

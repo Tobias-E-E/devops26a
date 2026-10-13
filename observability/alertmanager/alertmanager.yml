@@ -1,0 +1,33 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: webhook-receiver
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 1h
+
+receivers:
+  - name: webhook-receiver
+    webhook_configs:
+      - url: "http://webhook-receiver:8080/alert"
+        send_resolved: true
+
+    # A real deployment would send mail instead of (or in addition to) the
+    # webhook above - see the lab's "Koppla Alertmanager till en riktig
+    # kanal" step. Never commit real SMTP credentials: use auth_password_file
+    # (not auth_password) to read the app password from a file that never
+    # enters git (e.g. a gitignored .env, mounted read-only at the path
+    # below), not from this tracked config. Example shape:
+    #
+    #   email_configs:
+    #     - to: "oncall@example.com"
+    #       from: "alertmanager@example.com"
+    #       smarthost: "smtp.example.com:587"
+    #       auth_username: "alertmanager@example.com"
+    #       auth_password_file: /etc/alertmanager/secrets/smtp_password
+    #
+    # Port 587 (STARTTLS) with an app password usually works from cloud
+    # VMs; port 25 is often blocked outbound. Low-friction alternative if
+    # SMTP is a hassle: a Teams/Discord/Slack incoming webhook - same
+    # webhook_configs mechanism as above, just a different url.

@@ -1,0 +1,18 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: frontend
+spec:
+  to:
+    kind: Service
+    name: frontend
+  port:
+    targetPort: 8080
+  # Edge termination: Rahti terminates TLS at the router and forwards plain
+  # HTTP to the frontend Service — the default behavior the OpenShift
+  # console offers when you "expose" a Service, so this is what students
+  # will see there. insecureEdgeTerminationPolicy: Redirect sends any plain
+  # HTTP request to HTTPS instead of serving it.
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

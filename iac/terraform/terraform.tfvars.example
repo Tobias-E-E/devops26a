@@ -1,0 +1,33 @@
+# Copy this file to terraform.tfvars and fill in the values marked
+# REQUIRED below. terraform.tfvars is gitignored — never commit it, even
+# though nothing here is secret (real secrets, i.e. cPouta credentials,
+# live in clouds.yaml instead, see README.md).
+
+# REQUIRED — your project's internal network name.
+# Find it with: openstack network list
+network_name = "CHANGE-ME-project-network"
+
+# REQUIRED — GHCR namespace that publishes the two images (usually your
+# GitHub username or org). Must match .github/workflows/publish-images.yml.
+ghcr_owner = "CHANGE-ME-github-username"
+
+# REQUIRED — set your own unique value, e.g. m8-<firstname>, same
+# convention as M7. Every resource name in the module is derived from it
+# (VM, security group, port, keypair), so you can tell your resources
+# apart in Horizon from the ones you built by hand in M7 — and from your
+# partner's. OpenStack namespaces these per PROJECT, not per Terraform
+# state, and allows duplicate names, so with the default instance_name =
+# "template-app" everyone in the project ends up with identically named
+# resources: no error, but no way to see whose is whose, and it is easy
+# to delete the wrong security group by hand later.
+instance_name = "CHANGE-ME-m8-firstname"
+
+# Path to your local SSH public key, imported into OpenStack as a keypair.
+# Set to the course's dedicated M7 key (see README.md) — override if yours
+# lives elsewhere.
+ssh_public_key_path = "~/.ssh/cpouta_ed25519.pub"
+
+# Optional overrides — defaults in variables.tf already work on cPouta.
+# image_name       = "Ubuntu-24.04"
+# flavor_name      = "standard.small"
+# app_port         = 8080

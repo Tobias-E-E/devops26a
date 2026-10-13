@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app.kubernetes.io/name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: backend
+    spec:
+      containers:
+        - name: backend
+          # Placeholder owner: publish-images.yml lowercases GITHUB_REPOSITORY_OWNER
+          # and pushes ghcr.io/<owner>/template-app-backend:latest — fill in the
+          # real (lowercased) org/user before applying.
+          image: ghcr.io/<ägare>/template-app-backend:latest
+          ports:
+            - containerPort: 8000
+          # Rahti LimitRange caps CPU limit/request ratio at 5 per container
+          # (see TASK-8 findings) — 500m/100m = 5 stays inside it.
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 20

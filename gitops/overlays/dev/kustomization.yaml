@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# No `namespace:` field here on purpose — the Flux Kustomization CR that
+# applies this overlay (../../flux/dev/kustomization.yaml) sets
+# spec.targetNamespace, so placement is Flux's job, not kustomize's.
+# See ../../README.md.
+
+resources:
+  - ../../base
+
+labels:
+  - includeSelectors: false
+    pairs:
+      environment: dev
+
+replicas:
+  - name: backend
+    count: 1
+  - name: frontend
+    count: 1

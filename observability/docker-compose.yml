@@ -1,0 +1,109 @@
+# Reference observability stack for the template app (Spar A).
+#
+# Run this NEXT TO the app's own docker-compose.yml (in ../), as a separate
+# stack. It does not modify or depend on the app's compose file — it reaches
+# the app over the host, the same way an external monitoring box would.
+#
+#   (from ../)              docker compose up -d --build
+#   (from this directory)   docker compose up -d
+#
+# Ports published on the host: Prometheus 9090, Alertmanager 9093,
+# Grafana 3000, cAdvisor 8081, node-exporter 9100, blackbox-exporter 9115,
+# webhook-receiver 8089. Keep the VM's security group restricted to the
+# classroom/your IP - see kursplan.md / TASK-18.
+services:
+  prometheus:
+    image: prom/prometheus:v3.13.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml:ro
+    mem_limit: 256m
+    cpus: 0.3
+
+  alertmanager:
+    image: prom/alertmanager:v0.33.1
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    mem_limit: 64m
+    cpus: 0.1
+
+  grafana:
+    image: grafana/grafana:13.1.1
+    ports:
+      - "3000:3000"
+    # SECURITY: admin/admin is a known default, and anonymous Viewer access
+    # is on. That is deliberate for this reference (it is not reachable
+    # from the internet - the VM's security group only opens 22 and 8080,
+    # see observability/README.md and the lab guide's SSH-tunnel section),
+    # but change GF_SECURITY_ADMIN_PASSWORD before using this compose file
+    # anywhere less locked-down.
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    mem_limit: 256m
+    cpus: 0.3
+
+  node-exporter:
+    image: prom/node-exporter:v1.12.1
+    ports:
+      - "9100:9100"
+    # Host-level mounts so node-exporter reports the VM's own metrics, not
+    # the container's. Read-only, standard reference config.
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    mem_limit: 64m
+    cpus: 0.1
+
+  cadvisor:
+    image: ghcr.io/google/cadvisor:v0.60.5
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    mem_limit: 128m
+    cpus: 0.2
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.28.0
+    ports:
+      - "9115:9115"
+    # Reaches the app stack via the host, not a shared docker network - the
+    # app's own docker-compose.yml is untouched. "host.docker.internal" is
+    # automatic on Docker Desktop (macOS/Windows) but NOT on a plain Linux
+    # engine (the real cPouta VM) - the extra_hosts entry below is what
+    # makes the mapping work there too (Docker Engine >= 20.10).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 64m
+    cpus: 0.1
+
+  webhook-receiver:
+    # Minimal HTTP echo server: logs every request (headers + body) to
+    # stdout. Stands in for a real alert destination - see
+    # alertmanager/alertmanager.yml for where a real mail config would go.
+    image: mendhak/http-https-echo:41
+    ports:
+      - "8089:8080"
+    environment:
+      - HTTP_PORT=8080
+    mem_limit: 64m
+    cpus: 0.1

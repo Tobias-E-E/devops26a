@@ -1,0 +1,53 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+.DS_Store
+
+# Course material, auto-cloned into the devcontainer by postCreateCommand (see M1) —
+# never committed, students never see it in git status/diffs.
+course-material/
+
+# --- Credentials & secrets — never commit these ---
+# This is a safety net on top of the lab instructions, not a replacement for them:
+# gitignore only protects files that were NEVER committed. If a credential file was
+# added and committed before this rule existed, it stays in git history until purged
+# (git filter-repo / BFG) — always double-check `git status` before committing.
+
+# OpenStack/CSC (cPouta) application credentials — must live at
+# ~/.config/openstack/clouds.yaml, never in the repo (see M8)
+clouds.yaml
+secure.yaml
+*-openrc.sh
+
+# SSH private keys (the matching *.pub public key is fine to commit/leave tracked —
+# it belongs in CSC's authorized_keys, not secret)
+*.pem
+*.ppk
+id_rsa*
+id_ed25519*
+cpouta_ed25519*
+
+# Environment secrets — whitelist a committed template explicitly if one is added
+.env
+.env.*
+!.env.example
+
+# Kubernetes/Rahti kubeconfig (spår B)
+kubeconfig*
+*.kubeconfig
+
+# Terraform — local state/vars, never committed.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!iac/terraform/*.tfvars.example
+# Spår C:s miljödefinitioner är COMMITTADE by design — inga hemligheter,
+# och diffen mellan dev och prod SKA synas i git (se filernas egna
+# huvudkommentarer). Bara envs/ undantas; terraform.tfvars förblir ignorerad.
+!iac/terraform/envs/*.tfvars
+crash.log

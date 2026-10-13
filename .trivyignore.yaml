@@ -1,0 +1,57 @@
+# Trivy ignore file — deliberately EMPTY of live entries.
+#
+# This file exists so the mechanism is documented and reviewable, not so
+# findings can be made to disappear. Read the rules below before adding
+# anything.
+#
+# ---------------------------------------------------------------------
+# The remediation hierarchy (see security/README.md for the full argument)
+#
+#   1. PATCH      — a fixed version exists → upgrade. Always first.
+#   2. IGNORE     — with an expiry date and a named owner. Only for the two
+#                   cases below.
+#   3. ACCEPT     — permanent risk acceptance. Not a developer's call;
+#                   it belongs to whoever owns the service.
+#
+# An entry here is only legitimate in one of two situations:
+#
+#   (a) NOT FIXABLE IN CONTEXT. There is no patched version, or the patch
+#       requires a change you cannot make yet (major version bump mid-
+#       release, upstream dependency that has not moved). Note: Trivy runs
+#       here with `--ignore-unfixed`, so a finding you actually see has a
+#       fix available — meaning case (a) is rare and needs a real reason,
+#       not "the upgrade is annoying".
+#
+#   (b) PROVABLY UNREACHABLE. The vulnerable code path does not exist in
+#       this application — not "we think it's low risk", but a statement
+#       someone could disprove by pointing at a line of code.
+#
+# "We're behind nginx", "we don't take user input there" and "it's only a
+# DoS" are NOT case (b). They are plausible-sounding risk arguments, and
+# they are how teams end up shipping known-vulnerable code with a clean
+# conscience. If a patch exists, take the patch — see the git history of
+# backend/requirements.txt for what that looks like in practice.
+#
+# Every entry MUST carry:
+#   - statement:  why this is case (a) or case (b), specifically
+#   - expired_at: a date. Trivy starts reporting the finding again after
+#                 it, which forces a re-review instead of letting the
+#                 exception outlive the reason for it.
+#
+# ---------------------------------------------------------------------
+# Example (commented out — this CVE is not present in this project):
+#
+# vulnerabilities:
+#   - id: CVE-2024-00000
+#     paths:
+#       - "usr/local/lib/python3.12/site-packages/somelib"
+#     statement: >
+#       Case (b): the vulnerability is in somelib's XML parser, reachable
+#       only via somelib.parse_xml(). This service never calls it —
+#       `grep -r parse_xml backend/` returns nothing. Upstream fix lands in
+#       2.0, which needs the Python 3.13 migration first (see issue #42).
+#       Owner: <name>. Re-review with that migration.
+#     expired_at: 2026-12-01
+#
+# ---------------------------------------------------------------------
+# Live entries below this line. Keep it empty if you can.

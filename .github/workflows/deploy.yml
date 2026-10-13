@@ -1,0 +1,66 @@
+name: Deploy to VM
+
+# Reference CD workflow (M9): after "Publish images" (see
+# publish-images.yml) has built and pushed new
+# images to GHCR on a push to main, this workflow SSHes into the cPouta
+# VM and pulls + restarts the stack. Deliberately simple push-model
+# deploy — see the "CD: automatisk deploy till VM (M9)" README section
+# for the weaknesses discussion this is meant to seed (GitOps, session 9).
+#
+# Why workflow_run instead of `on: push: branches: [main]` directly: a
+# plain push trigger on this workflow would fire in parallel with
+# "Publish images" (same push event) and could SSH in and `pull` BEFORE
+# the new image even exists in GHCR. Chaining on workflow_run against
+# "Publish images" completing makes the ordering explicit — this job
+# only starts once that workflow has finished, and only proceeds
+# (`if:` below) if it succeeded.
+on:
+  workflow_run:
+    workflows: ["Publish images"]
+    types: [completed]
+    branches: [main]
+
+# Least-privilege GITHUB_TOKEN: this workflow only opens an outbound SSH
+# connection — it doesn't need to read or write anything in the repo or
+# registry, so the default token permissions are trimmed to the minimum
+# GitHub allows (contents: read is the floor; there is no "none").
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: SSH deploy to cPouta VM
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+      DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+      DEPLOY_KNOWN_HOSTS: ${{ vars.DEPLOY_KNOWN_HOSTS }}
+      DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+    steps:
+      - name: Configure SSH (deploy key + pinned host key)
+        # Secrets/vars flow through env: above, not inline ${{ }} inside
+        # the script below — keeps them out of the literal command text
+        # (no shell-quoting/injection surprises) and makes the script
+        # itself copy-pasteable for debugging without leaking anything.
+        #
+        # Host key verification: DEPLOY_KNOWN_HOSTS is pinned ahead of
+        # time by a human (`ssh-keyscan -H <floating-ip>`, pasted into
+        # the DEPLOY_KNOWN_HOSTS repo variable — see README). Writing it
+        # to known_hosts before the ssh call lets us use
+        # StrictHostKeyChecking=yes below. NEVER
+        # StrictHostKeyChecking=no — that disables server authentication
+        # entirely and accepts any host silently (MITM-able).
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Deploy (pull + restart stack)
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            'docker compose -f /opt/app/docker-compose.yml pull && docker compose -f /opt/app/docker-compose.yml up -d'

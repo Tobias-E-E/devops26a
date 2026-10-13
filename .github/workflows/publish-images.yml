@@ -1,0 +1,75 @@
+name: Publish images
+
+on:
+  push:
+    branches: [main]
+
+# Least-privilege GITHUB_TOKEN: this workflow only checks out the repo and
+# publishes container images, so that's all the token can do — read the repo,
+# write packages. Nothing else (no issues, no PRs, no other repos), so even a
+# compromised step here can't do more damage than that.
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push-backend:
+    name: Build and push backend image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase repository owner
+        id: owner
+        run: echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          # Only a run on main is allowed to publish. workflow_dispatch on any
+          # other branch (e.g. the M6 secrets-masking demo) still builds and
+          # exercises every step, but never moves :latest or mints a :<sha>
+          # tag for a commit that was never merged.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ghcr.io/${{ steps.owner.outputs.owner }}/template-app-backend:latest
+            ghcr.io/${{ steps.owner.outputs.owner }}/template-app-backend:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+  build-and-push-frontend:
+    name: Build and push frontend image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase repository owner
+        id: owner
+        run: echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          # Same guard as the backend job above: only main may publish.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ghcr.io/${{ steps.owner.outputs.owner }}/template-app-frontend:latest
+            ghcr.io/${{ steps.owner.outputs.owner }}/template-app-frontend:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}

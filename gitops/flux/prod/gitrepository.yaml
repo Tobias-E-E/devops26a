@@ -1,0 +1,18 @@
+# Points Flux's source-controller at the manifest repo. CSC's central Flux
+# stack reconciles GitRepository/Kustomization objects wherever they're
+# created in a tenant namespace — there is no FluxInstance to bootstrap
+# first (verified in TASK-8: a tenant-namespace FluxInstance is silently
+# ignored by the operator, and isn't needed).
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: template-app-gitops
+  namespace: <projekt-namespace>-prod
+spec:
+  interval: 1m
+  # URL to YOUR OWN manifest repo — see ../../README.md's copy-to-own-repo
+  # flow. There is no course-provided repo to point at here; each student
+  # (or project) creates their own and fills this in.
+  url: <manifest-repo-url>
+  ref:
+    branch: main

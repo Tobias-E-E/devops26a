@@ -1,0 +1,29 @@
+{
+  "name": "template-app",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+  "forwardPorts": [8080, 8000],
+  "portsAttributes": {
+    "8080": { "label": "frontend (nginx)" },
+    "8000": { "label": "backend (FastAPI)" }
+  },
+  "postCreateCommand": "pip install --no-cache-dir -r backend/requirements.txt && (git clone https://github.com/Tobias-Eriksson/devops26-kursmaterial.git course-material || echo 'WARNING: could not clone course-material (network/auth?) - run the clone manually, see M1')",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "hashicorp.terraform",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}

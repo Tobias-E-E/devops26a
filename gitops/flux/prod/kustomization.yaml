@@ -1,0 +1,18 @@
+# Flux's Kustomization CR (kustomize.toolkit.fluxcd.io) — NOT a kustomize
+# kustomization.yaml. This is what actually applies gitops/overlays/prod to
+# the cluster once GitRepository has synced. Field names match TASK-8's
+# verified minimal spec.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: template-app-prod
+  namespace: <projekt-namespace>-prod
+spec:
+  interval: 1m
+  path: ./gitops/overlays/prod
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: template-app-gitops
+  serviceAccountName: flux-applier
+  targetNamespace: <projekt-namespace>-prod

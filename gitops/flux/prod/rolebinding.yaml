@@ -1,0 +1,16 @@
+# Grants the flux-applier ServiceAccount admin rights scoped to this one
+# namespace (RoleBinding, not ClusterRoleBinding) by binding it to the
+# built-in "admin" ClusterRole. Verified working pattern from TASK-8.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: flux-applier-admin
+  namespace: <projekt-namespace>-prod
+subjects:
+  - kind: ServiceAccount
+    name: flux-applier
+    namespace: <projekt-namespace>-prod
+roleRef:
+  kind: ClusterRole
+  name: admin
+  apiGroup: rbac.authorization.k8s.io
