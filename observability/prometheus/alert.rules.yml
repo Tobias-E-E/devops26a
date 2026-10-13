@@ -16,3 +16,18 @@ groups:
           description: >-
             Blackbox probe against {{ $labels.instance }} has failed for
             more than 30s. The app (frontend and/or backend) is likely down.
+
+  - name: app-latency
+    rules:
+      # Own rule (Spår A): the health check itself is slow. probe_duration_seconds
+      # is a gauge, so we average it over 1m instead of rate()-ing it.
+      - alert: HealthCheckSlow
+        expr: avg_over_time(probe_duration_seconds{job="blackbox-http"}[1m]) > 0.5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Health check on {{ $labels.instance }} is slow"
+          description: >-
+            The blackbox probe against {{ $labels.instance }} has averaged more
+            than 0.5s over the last minute. The app is up but responding slowly.

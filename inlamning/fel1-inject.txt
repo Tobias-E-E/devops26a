@@ -1,0 +1,20 @@
+    image: ghcr.io/tobias-e-e/template-app-backend:v9.9.9
+    image: ghcr.io/tobias-e-e/template-app-frontend:latest
+ Container app-backend-1 Stopping 
+ Container app-backend-1 Stopped 
+Going to remove app-backend-1
+ Container app-backend-1 Removing 
+ Container app-backend-1 Removed 
+ Image ghcr.io/tobias-e-e/template-app-backend:v9.9.9 Pulling 
+up -d exit=1
+11:23:36
+ Image ghcr.io/tobias-e-e/template-app-backend:v9.9.9 Error failed to resolve reference "ghcr.io/tobias-e-e/template-app-backend:v9.9.9": ghcr.io/tobias-e-e/template-app-backend:v9.9.9: not found
+Error response from daemon: failed to resolve reference "ghcr.io/tobias-e-e/template-app-backend:v9.9.9": ghcr.io/tobias-e-e/template-app-backend:v9.9.9: not found
+NAME             IMAGE                                             COMMAND                  SERVICE    CREATED          STATUS          PORTS
+app-frontend-1   ghcr.io/tobias-e-e/template-app-frontend:latest   "/docker-entrypoint.…"   frontend   20 minutes ago   Up 13 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+--- curl -i /api/health
+HTTP/1.1 502 Bad Gateway
+--- curl -i /api/items
+HTTP/1.1 502 Bad Gateway
+--- curl / (page)
+GET / -> 200

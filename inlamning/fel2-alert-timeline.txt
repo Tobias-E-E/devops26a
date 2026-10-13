@@ -1,0 +1,24 @@
++0s 11:36:27 prom=none probe=1 am=none
++16s 11:36:43 prom=none probe=0 am=none
++21s 11:36:48 prom=AppDown=pending probe=0 am=none
++47s 11:37:14 prom=AppDown=firing probe=0 am=AppDown:active
+--- webhook-receiver POSTs (last 4):
+13/Oct/2026:11:24:38 +0000
+13/Oct/2026:11:25:38 +0000
+13/Oct/2026:11:26:38 +0000
+13/Oct/2026:11:37:23 +0000
+resolved bodies: 4
+AM notify failures: 0
+AppDown firing activeAt= 2026-10-13T11:36:43
++0s 11:37:58 prom=AppDown=firing probe=0 am=AppDown:active
++11s 11:38:09 prom=AppDown=firing probe=1 am=AppDown:active
++16s 11:38:14 prom=none probe=1 am=none
+--- webhook-receiver POSTs (last 4):
+13/Oct/2026:11:25:38 +0000
+13/Oct/2026:11:26:38 +0000
+13/Oct/2026:11:37:23 +0000
+13/Oct/2026:11:38:23 +0000
+resolved bodies: 5
+AM notify failures: 0
+AppDown firing from 11:37:15 to 11:38:00
+AppDown pending from 11:36:45 to 11:37:00

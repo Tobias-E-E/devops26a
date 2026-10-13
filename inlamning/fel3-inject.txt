@@ -1,0 +1,25 @@
+ Container app-frontend-1 Running 
+ Container app-backend-1 Recreate 
+ Container app-backend-1 Recreated 
+ Container app-backend-1 Starting 
+exit=0
+11:39:52
+ Container app-backend-1 Started 
+NAME             IMAGE                                             COMMAND                  SERVICE    CREATED         STATUS         PORTS
+app-backend-1    ghcr.io/tobias-e-e/template-app-backend:latest    "uvicorn app.main:ap…"   backend    5 seconds ago   Up 3 seconds   8000/tcp
+app-frontend-1   ghcr.io/tobias-e-e/template-app-frontend:latest   "/docker-entrypoint.…"   frontend   2 minutes ago   Up 2 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+--- curl -i /api/health
+HTTP/1.1 502 Bad Gateway
+--- curl -i /api/items
+HTTP/1.1 502 Bad Gateway
+--- GET /
+GET / -> 200
+--- docker compose config (backend command)
+    command:
+      - --port
+      - "8001"
+total 16
+drwxr-xr-x 2 root root 4096 Oct 13 11:39 .
+drwxr-xr-x 4 root root 4096 Oct 13 10:52 ..
+-rw-r--r-- 1 root root  101 Oct 13 11:39 docker-compose.override.yml
+-rw-r--r-- 1 root root  512 Oct 13 11:25 docker-compose.yml

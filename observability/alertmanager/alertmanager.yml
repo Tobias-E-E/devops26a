@@ -12,6 +12,8 @@ receivers:
     webhook_configs:
       - url: "http://webhook-receiver:8080/alert"
         send_resolved: true
+    discord_configs:
+      - webhook_url_file: /etc/alertmanager/secrets/discord_url
 
     # A real deployment would send mail instead of (or in addition to) the
     # webhook above - see the lab's "Koppla Alertmanager till en riktig

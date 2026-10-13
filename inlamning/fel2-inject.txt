@@ -1,0 +1,16 @@
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+2026/10/13 11:28:02 [emerg] 30#30: open() "/tmp/nginx.pid" failed (13: Permission denied)
+nginx: [emerg] open() "/tmp/nginx.pid" failed (13: Permission denied)
+nginx: configuration file /etc/nginx/nginx.conf test failed
+exit=1
+11:28:02
+--- curl -i /api/health
+HTTP/1.1 200 OK
+--- curl -i /api/items
+HTTP/1.1 200 OK
+--- POST item
+POST /api/items -> 201
+--- GET /
+GET / -> 200
+app-backend-1 Up 2 minutes
+app-frontend-1 Up 18 minutes

@@ -1,0 +1,27 @@
+ Container app-frontend-1 Running 
+ Container app-backend-1 Creating 
+ Container app-backend-1 Created 
+ Container app-backend-1 Starting 
+ Container app-backend-1 Started 
+11:25:15
+NAME             IMAGE                                             COMMAND                  SERVICE    CREATED          STATUS                  PORTS
+app-backend-1    ghcr.io/tobias-e-e/template-app-backend:latest    "uvicorn app.main:ap…"   backend    2 seconds ago    Up Less than a second   8000/tcp
+app-frontend-1   ghcr.io/tobias-e-e/template-app-frontend:latest   "/docker-entrypoint.…"   frontend   22 minutes ago   Up 15 minutes           0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  <html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>
+
+ 157  100   157    0     0  81431      0 --:--:-- --:--:-- --:--:--  153k
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>

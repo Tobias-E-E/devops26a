@@ -1,0 +1,5 @@
+app-backend-1 Up 14 minutes
+app-frontend-1 Up About a minute
+{"status":"ok"}
+docker-compose.yml
+alerts: []

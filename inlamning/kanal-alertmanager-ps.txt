@@ -1,0 +1,13 @@
+total 16
+drwxrwxr-x 2 ubuntu ubuntu 4096 Oct 13 11:14 .
+drwxrwxr-x 6 ubuntu ubuntu 4096 Oct 13 11:14 ..
+-rw-r--r-- 1 ubuntu ubuntu  121 Oct 13 11:14 .env
+-rw-rw-r-- 1 ubuntu ubuntu 1351 Oct 13 11:14 alertmanager.yml
+121 alertmanager/.env
+1
+ Container observability-alertmanager-1 Recreate 
+ Container observability-alertmanager-1 Recreated 
+ Container observability-alertmanager-1 Starting 
+ Container observability-alertmanager-1 Started 
+NAME                           IMAGE                       COMMAND                  SERVICE        CREATED         STATUS         PORTS
+observability-alertmanager-1   prom/alertmanager:v0.33.1   "/bin/alertmanager -…"   alertmanager   7 seconds ago   Up 5 seconds   0.0.0.0:9093->9093/tcp, [::]:9093->9093/tcp
