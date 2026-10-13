@@ -30,6 +30,7 @@ services:
       - "9093:9093"
     volumes:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./alertmanager/.env:/etc/alertmanager/secrets/discord_url:ro
     mem_limit: 64m
     cpus: 0.1
 
