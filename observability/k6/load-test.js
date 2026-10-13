@@ -21,6 +21,8 @@ export const options = {
   // same way a CI gate would - a starting point to tighten/loosen once
   // you know your app's real numbers.
   thresholds: {
+    // Tröskeln lämnad på 500 ms — mätt p95 över nätet till cPouta
+    // (195.148.30.48, 2026-10-13) var 38 ms, så SLO:t håller med marginal.
     http_req_duration: ["p(95)<500"], // 95% of requests under 500ms
     http_req_failed: ["rate<0.01"], // fewer than 1% of requests may fail
   },
