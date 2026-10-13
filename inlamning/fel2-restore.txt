@@ -1,0 +1,20 @@
+=== negative claim (line 704-705): restart frontend 11:37:49
+ Container app-frontend-1 Started 
+--- curl -i /api/health after restart
+HTTP/1.1 503 Service Temporarily Unavailable
+1
+=== FEL 2 RESTORE (line 699-702) 11:37:53
+ Container app-backend-1 Running 
+ Container app-frontend-1 Recreate 
+ Container app-frontend-1 Recreated 
+ Container app-frontend-1 Starting 
+ Container app-frontend-1 Started 
+11:37:55
+NAME             IMAGE                                             COMMAND                  SERVICE    CREATED          STATUS                  PORTS
+app-backend-1    ghcr.io/tobias-e-e/template-app-backend:latest    "uvicorn app.main:ap…"   backend    12 minutes ago   Up 12 minutes           8000/tcp
+app-frontend-1   ghcr.io/tobias-e-e/template-app-frontend:latest   "/docker-entrypoint.…"   frontend   2 seconds ago    Up Less than a second   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+--- curl immediately:
+{"status":"ok"}
+--- curl after 3 s:
+{"status":"ok"}
+{"status":"ok"}

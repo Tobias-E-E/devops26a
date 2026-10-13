@@ -1,0 +1,9 @@
+observability-webhook-receiver-1 0.00% 36.9MiB / 64MiB
+observability-cadvisor-1 14.83% 96.21MiB / 128MiB
+observability-prometheus-1 0.35% 129.2MiB / 256MiB
+observability-grafana-1 1.98% 185.6MiB / 256MiB
+observability-alertmanager-1 0.09% 38.39MiB / 64MiB
+observability-node-exporter-1 0.00% 23.68MiB / 64MiB
+observability-blackbox-exporter-1 0.00% 28.14MiB / 64MiB
+app-frontend-1 1.75% 4.516MiB / 1.875GiB
+app-backend-1 4.93% 41.96MiB / 1.875GiB

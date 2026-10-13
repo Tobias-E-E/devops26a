@@ -1,0 +1,4 @@
+app-backend-1 Up 2 minutes
+app-frontend-1 Up 18 minutes
+{"status":"ok"}
+alerts: []

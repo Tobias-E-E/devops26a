@@ -1,0 +1,27 @@
+fs.protected_regular = 2
+=== Vanliga problem remedy (line 1077-1084): clean container 11:36:16
+ Container app-frontend-1 Starting 
+ Container app-frontend-1 Started 
+HTTP/1.1 200 OK
+=== retry the lab command verbatim on the clean container (expect same error)
+nginx: [emerg] open() "/tmp/nginx.pid" failed (13: Permission denied)
+nginx: configuration file /etc/nginx/nginx.conf test failed
+=== clean again, then DEVIATION: same command without -u root 11:36:21
+ Container app-frontend-1 Started 
+HTTP/1.1 200 OK
+11:36:26
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+2026/10/13 11:36:26 [notice] 23#23: signal process started
+exit=0
+injected 11:36:26
+--- curl -i /api/health
+HTTP/1.1 503 Service Temporarily Unavailable
+--- curl -i /api/items
+HTTP/1.1 200 OK
+--- POST item
+POST /api/items -> 201
+--- GET /
+GET / -> 200
+app-backend-1 Up 11 minutes
+app-frontend-1 Up 4 seconds

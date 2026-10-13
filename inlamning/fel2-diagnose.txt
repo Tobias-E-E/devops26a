@@ -1,0 +1,22 @@
+uid=101(nginx) gid=101(nginx) groups=101(nginx)
+-rw-r--r--    1 nginx    nginx            2 Oct 13 11:10 /tmp/nginx.pid
+
+/tmp:
+total 32
+drwxrwxrwt    1 root     root          4096 Oct 13 11:10 .
+5:pid        /tmp/nginx.pid;
+CapEff:	0000000000000000
+CapBnd:	00000000a80425fb
+--- as root:
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)
+CapEff:	00000000a80425fb
+CapBnd:	00000000a80425fb
+NoNewPrivs:	0
+-rw-r--r--    1 nginx    nginx            2 Oct 13 11:10 /tmp/nginx.pid
+nginx: [emerg] open() "/tmp/nginx.pid" failed (13: Permission denied)
+nginx: configuration file /etc/nginx/nginx.conf test failed
+nginx version: nginx/1.31.6
+--- current conf state:
+2:  location = /api/health { return 503; }
+--- image labels / user
+User=101 Image=ghcr.io/tobias-e-e/template-app-frontend:latest SecurityOpt=[] CapDrop=[]

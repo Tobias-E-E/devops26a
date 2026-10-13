@@ -1,0 +1,28 @@
+=== negative claim (line 737-739): down + up -d with override still present 11:41:04
+ Network app_default Removed 
+ Container app-frontend-1 Started 
+--- curl -i /api/health
+HTTP/1.1 502 Bad Gateway
+=== FEL 3 RESTORE (line 731-735) 11:41:11
+ Container app-frontend-1 Running 
+ Container app-backend-1 Recreate 
+ Container app-backend-1 Recreated 
+ Container app-backend-1 Starting 
+ Container app-backend-1 Started 
+11:41:13
+NAME             IMAGE                                             COMMAND                  SERVICE    CREATED         STATUS                  PORTS
+app-backend-1    ghcr.io/tobias-e-e/template-app-backend:latest    "uvicorn app.main:ap…"   backend    2 seconds ago   Up Less than a second   8000/tcp
+app-frontend-1   ghcr.io/tobias-e-e/template-app-frontend:latest   "/docker-entrypoint.…"   frontend   7 seconds ago   Up 6 seconds            0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+--- curl immediately:
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>
+
+--- curl after 4 s:
+{"status":"ok"}
+docker-compose.yml
+{"status":"ok"}

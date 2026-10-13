@@ -1,0 +1,80 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "probe_http_status_code{job=\"blackbox-http\"}",
+          "legendFormat": "status {{instance}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Health-check HTTP status (blackbox)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "probe_duration_seconds{job=\"blackbox-http\"}",
+          "legendFormat": "probe_duration_seconds",
+          "refId": "A"
+        },
+        {
+          "expr": "count(container_last_seen{name=\"app-backend-1\"}) or vector(0)",
+          "legendFormat": "app-backend-1 containers seen",
+          "refId": "B"
+        }
+      ],
+      "title": "Health-check latency vs. backend up",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [
+    "spar-a"
+  ],
+  "time": {
+    "from": "2026-10-13T11:20:00Z",
+    "to": "2026-10-13T11:30:00Z"
+  },
+  "timezone": "utc",
+  "title": "Spår A – Incident (Fel 1)",
+  "uid": "spar-a-incident"
+}

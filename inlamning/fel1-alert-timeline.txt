@@ -1,0 +1,21 @@
++0s 11:24:19 prom=AppDown=pending,HealthCheckSlow=pending probe=0 am=none
++5s 11:24:24 prom=HealthCheckSlow=pending,AppDown=pending probe=0 am=none
++10s 11:24:29 prom=AppDown=firing,HealthCheckSlow=pending probe=0 am=AppDown:active
+--- webhook-receiver POSTs (last 4):
+13/Oct/2026:11:18:26 +0000
+13/Oct/2026:11:20:26 +0000
+13/Oct/2026:11:22:26 +0000
+13/Oct/2026:11:24:38 +0000
+resolved bodies: 2
+AM notify failures: 0
++0s 11:25:16 prom=AppDown=firing,HealthCheckSlow=firing probe=0 am=AppDown:active,HealthCheckSlow:active
++10s 11:25:26 prom=AppDown=firing,HealthCheckSlow=firing probe=1 am=AppDown:active,HealthCheckSlow:active
++16s 11:25:32 prom=HealthCheckSlow=firing probe=1 am=HealthCheckSlow:active
++62s 11:26:18 prom=none probe=1 am=none
+--- webhook-receiver POSTs (last 4):
+13/Oct/2026:11:22:26 +0000
+13/Oct/2026:11:24:38 +0000
+13/Oct/2026:11:25:38 +0000
+13/Oct/2026:11:26:38 +0000
+resolved bodies: 4
+AM notify failures: 0
